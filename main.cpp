@@ -29,6 +29,7 @@ int main() {
 	
 	Room* currentRoom; //whichever room the user is currently in, all room attributes accessible there
 	
+	//creating all the rooms
 	Room* A_site = new Room("A site", "at bomb site A. There doesn't seem to be anything here.");
 	Room* CT_stairs = new Room("CT stairs", "at counter-terrorist spawn stairs.");
   
@@ -133,21 +134,21 @@ int main() {
 	while(true){
 		vector<Items*>::iterator it;
 		for(it = inventory.begin(); it != inventory.end(); it++) {
-			if (strcmp((*it)->getDesc(), bomb->getDesc()) == 0) {
+			if (strcmp((*it)->getDesc(), bomb->getDesc()) == 0){ //lose condition
 				cout << "YOU LOST! You picked up the bomb and it blew up in your face." << endl;
 				return 0;
 			}
-			else if(strcmp((*it)->getDesc(), defuse->getDesc()) == 0 && currentRoom == B_site){
+			else if(strcmp((*it)->getDesc(), defuse->getDesc()) == 0 && currentRoom == B_site){ //win condition
 				cout << "YOU WON! You made it to B site and defused the bomb. Counter-Terrorists Win." << endl;
 				return 0;
 			}
 		}
 
-		cout << "\n\nYou are " << currentRoom->getDesc() << endl;
+		cout << "\n\nYou are " << currentRoom->getDesc() << endl; //print user location and room info
 		currentRoom->printInfo();
 		cout << endl;
 		
-		cout << "Your inventory: " << endl;
+		cout << "Your inventory: " << endl; //print user's inventory
 		for(it = inventory.begin(); it != inventory.end(); it++) {
 		  cout<< (*it)->getDesc() << endl;
 		}
@@ -165,14 +166,14 @@ int main() {
 				cout << endl;
 		}
 		
-		else if(strcmp(input, "go") == 0){
+		else if(strcmp(input, "go") == 0){ //if user wants to move
 			cout<< "Input the direction where you want to go: (north, south, east, west)" << endl;
 			cin.getline(input, 100);
 			vector<Room*>::iterator iter;
-			for(iter = Rooms.begin(); iter != Rooms.end(); iter++) {
-				if (strcmp((*iter)->getName(), currentRoom->getName())==0) {
-					if((*iter)->checkDirection(input)){
-						currentRoom = (*iter)->setRoom(input);          
+			for(iter = Rooms.begin(); iter != Rooms.end(); iter++) { //iterate thru all rooms
+				if(strcmp((*iter)->getName(), currentRoom->getName()) == 0){ //locate current room
+					if((*iter)->checkDirection(input)){ //if specified direction is valid
+						currentRoom = (*iter)->setRoom(input); //set current room to the new room
 						break;
 					}
 				}
@@ -180,25 +181,25 @@ int main() {
 		}
 		
 		
-		else if(strcmp(input, "get") == 0){
+		else if(strcmp(input, "get") == 0){ //if user wants to pick up item
 			cout << "Type the name of the item you would like to pick up. " << endl;
 			cin.getline(input, 100);
 			vector<Items*>::iterator ite;
-			for(ite = currentRoom->getItems().begin(); ite != currentRoom->getItems().end(); ++ite) {   
-				if (strcmp((*ite)->getDesc(), input) == 0) {
-					inventory.push_back(*ite);
-					currentRoom->removeItem(*ite);
+			for(ite = currentRoom->getItems().begin(); ite != currentRoom->getItems().end(); ++ite) { //iterate through room items
+				if (strcmp((*ite)->getDesc(), input) == 0){ //if input matches an existing item
+					inventory.push_back(*ite); //add item to inventory
+					currentRoom->removeItem(*ite); //remove from room
 					break;
 				}
 			}
 		}
 
 
-		else if(strcmp(input, "drop") == 0){
+		else if(strcmp(input, "drop") == 0){ //if user wants to drop item
 		cout<< "Type the name of the item you would like to drop. It will be placed in the current room." << endl;
 		cin.getline(input, 100);
 		for(it = inventory.begin(); it != inventory.end(); it++) {
-		  if (strcmp((*it)->getDesc(), input)==0) {
+		  if (strcmp((*it)->getDesc(), input) == 0) { //if input matches an existing item
 			currentRoom->addItem(*it); 
 			it = inventory.erase(it);
 			break;
